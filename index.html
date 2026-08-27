@@ -1,0 +1,77 @@
+<!doctype html><html lang="fr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1f2937"><link rel="manifest" href="manifest.json"><title>Menus Famille</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:#f3f4f6;color:#111827}
+header{background:#1f2937;color:white;padding:18px 16px 14px;position:sticky;top:0;z-index:2}h1{font-size:22px;margin:0}.date{opacity:.7;font-size:13px;margin-top:3px}
+nav{position:sticky;bottom:0;z-index:3;display:flex;background:#fff;border-top:1px solid #ddd;padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;border:0;background:#fff;padding:10px 2px;font-size:12px;color:#6b7280}nav button.active{color:#111827;font-weight:700}
+main{max-width:700px;margin:auto;padding:14px 14px 90px}.screen{display:none}.screen.active{display:block}
+.card{background:#fff;border-radius:16px;padding:15px;margin:10px 0;box-shadow:0 1px 5px #0000000d}.hero{font-size:18px;font-weight:700}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #eee}.row:last-child{border-bottom:0}
+.small{font-size:13px;color:#6b7280}.tag{display:inline-block;padding:4px 8px;border-radius:99px;background:#e5e7eb;font-size:11px;margin-top:6px}
+button.action{border:0;border-radius:10px;padding:9px 12px;background:#111827;color:#fff}.qty{display:flex;align-items:center;gap:8px}.qty button{width:30px;height:30px;border:0;border-radius:8px;background:#e5e7eb;font-size:18px}
+h2{font-size:17px;margin:4px 0 10px}.check{display:flex;gap:10px;align-items:center;padding:8px 0}.check input{width:20px;height:20px}
+</style></head><body>
+<header><h1>🍽️ Menus Famille</h1><div class="date">2 adultes · 2 enfants · cycle mercredi → mardi</div></header>
+<main>
+<section id="today" class="screen active"></section>
+<section id="menu" class="screen"></section>
+<section id="courses" class="screen"></section>
+<section id="stock" class="screen"></section>
+<section id="freezer" class="screen"></section>
+</main>
+<nav>
+<button class="active" onclick="tab('today',this)">🏠<br>Aujourd'hui</button>
+<button onclick="tab('menu',this)">📅<br>Menu</button>
+<button onclick="tab('courses',this)">🛒<br>Courses</button>
+<button onclick="tab('stock',this)">📦<br>Stock</button>
+<button onclick="tab('freezer',this)">❄️<br>Congélo</button>
+</nav>
+<script>
+const meals=[
+["Mer 26","Soir","🐟 Fish sticks pour femme/enfants + poulet pané pour toi + purée + petits pois"],
+["Jeu 27","Soir","🥩 Steak veggie + riz + carottes"],
+["Ven 28","Soir","🍝 Bolognaise + pâtes + courgettes"],
+["Sam 29","Midi","🥞 Galettes bretonnes + salade"],
+["Sam 29","Soir","🍕 Pizza maison + salade"],
+["Dim 30","Midi","🍗 Poulet entier + rissolées + haricots verts"],
+["Dim 30","Soir","🧀 Gratin de pâtes jambon/fromage"],
+["Lun 31","Soir","🍜 Noodles poulet curry + légumes"],
+["Mar 1","Soir","🍲 Chili con carne + riz"]
+];
+let stock=JSON.parse(localStorage.stock||JSON.stringify({
+"Lait":0,"Œufs":0,"Pain tranché":0,"Yaourt grec (kg)":0.33,"Beurre":0.5,"Comté":0.5,
+"Salami (tranches)":12,"Concombre":1,"Courgettes":2,"Riz (sachets)":4,"Pâtes (paquets)":6
+}));
+let freezer=JSON.parse(localStorage.freezer||JSON.stringify({"Filet de poulet (kg)":1.2,"Haché (kg)":0.5,"Haricots verts (stock)":1}));
+let checks=JSON.parse(localStorage.checks||"[]");
+const need={
+"Lait":6,"Œufs":12,"Pain tranché":3,"Yaourt grec (kg)":0.5,"Beurre":0.5,"Comté":1,
+"Salami (tranches)":20,"Concombre":3,"Pain au lait":20,"Fromage en tranches":20,"Goûters enfants":10,
+"Steaks veggie":4,"Fish sticks":1,"Poulet pané":1,"Petits pois":1,"Carottes (kg)":1,
+"Galettes bretonnes":1,"Salade":2,"Pâtes à pizza":2,"Mozzarella":2,"Jambon":2,
+"Poulet entier":1,"Pommes de terre (kg)":2,"Noodles":1,"Légumes wok":1,
+"Crème":1,"Tomates concassées":4,"Oignons":3,"Haricots rouges":2,"Maïs":2,
+"Parmesan":1,"Ice Tea":1,"Eau pétillante (packs)":2,"M&M's":1,"Petits Écoliers":1
+};
+function save(){localStorage.stock=JSON.stringify(stock);localStorage.freezer=JSON.stringify(freezer)}
+function tab(id,b){document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");render()}
+function qty(obj,key){return `<div class="qty"><button onclick="chg('${obj}','${key}',-1)">−</button><b>${obj==='stock'?stock[key]:freezer[key]}</b><button onclick="chg('${obj}','${key}',1)">+</button></div>`}
+function chg(obj,key,d){if(obj==='stock')stock[key]=Math.max(0,(stock[key]||0)+d);else freezer[key]=Math.max(0,(freezer[key]||0)+d);save();render()}
+function render(){
+document.getElementById("today").innerHTML=`<div class="card"><div class="small">Aujourd'hui · mercredi</div><div class="hero">🐟 Fish sticks + poulet pané</div><div>Purée + petits pois</div><span class="tag">Repas du soir</span></div>
+<div class="card"><h2>🛒 Courses</h2><div class="hero">${Object.keys(need).filter(k=>(need[k]-(stock[k]||0))>0 && !["Lait","Œufs"].includes(k)).length} produits à vérifier</div><p class="small">La liste tient compte du stock enregistré.</p></div>
+<div class="card"><h2>👧 École cette semaine</h2><div>20 pains au lait · 20 salami · 20 tranches fromage · 3 concombres · 10 goûters</div></div>`;
+document.getElementById("menu").innerHTML=`<div class="card"><h2>📅 Cette semaine</h2>${meals.map(x=>`<div class="row"><div><b>${x[0]} · ${x[1]}</b><br>${x[2]}</div></div>`).join("")}</div>`;
+let groups=["Maison","Repas","Enfants","Boissons/snacks"];
+let keys=Object.keys(need);
+document.getElementById("courses").innerHTML=`<div class="card"><h2>🛒 À acheter</h2>${keys.map((k,i)=>{let n=need[k]-(stock[k]||0);return n>0?`<label class="check"><input type="checkbox" ${checks.includes(k)?"checked":""} onchange="toggle('${k}',this.checked)"><span><b>${k}</b><br><span class="small">Besoin ${need[k]} · stock ${stock[k]||0} → <b>acheter ${fmt(n)}</b></span></span></label>`:""}).join("")}</div>`;
+document.getElementById("stock").innerHTML=`<div class="card"><h2>📦 Frigo / placards</h2>${Object.keys(stock).map(k=>`<div class="row"><span>${k}</span>${qty("stock",k)}</div>`).join("")}</div>`;
+document.getElementById("freezer").innerHTML=`<div class="card"><h2>❄️ Congélateur</h2>${Object.keys(freezer).map(k=>`<div class="row"><span>${k}</span>${qty("freezer",k)}</div>`).join("")}</div>`;
+}
+function fmt(n){return Number.isInteger(n)?n:n.toFixed(2)}
+function toggle(k,v){if(v&&!checks.includes(k))checks.push(k);if(!v)checks=checks.filter(x=>x!==k);localStorage.checks=JSON.stringify(checks)}
+render();
+if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
+</script></body></html>
