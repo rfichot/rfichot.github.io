@@ -11,13 +11,58 @@ main{max-width:700px;margin:auto;padding:14px 14px 90px}.screen{display:none}.sc
 .row{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #eee}.row:last-child{border-bottom:0}
 .small{font-size:13px;color:#6b7280}.tag{display:inline-block;padding:4px 8px;border-radius:99px;background:#e5e7eb;font-size:11px;margin-top:6px}
 button.action{border:0;border-radius:10px;padding:9px 12px;background:#111827;color:#fff}.qty{display:flex;align-items:center;gap:8px}.qty button{width:30px;height:30px;border:0;border-radius:8px;background:#e5e7eb;font-size:18px}
-h2{font-size:17px;margin:4px 0 10px}.check{display:flex;gap:10px;align-items:center;padding:8px 0}.check input{width:20px;height:20px}@media (max-width:600px){
-  header{padding:14px 14px 12px}
-  h1{font-size:21px}
-  main{padding:12px 12px 90px}
-  .card{padding:14px;margin:8px 0;border-radius:14px}
-  .hero{font-size:17px}
-  nav button{font-size:11px;padding:8px 1px}
+h2{font-size:17px;margin:4px 0 10px}.check{display:flex;gap:10px;align-items:center;padding:8px 0}.check input{width:20px;height:20px}@media @media (max-width:600px){
+  html,body{
+    width:100%;
+    min-height:100%;
+    margin:0;
+    padding:0;
+  }
+
+  body{
+    min-height:100vh;
+    width:100%;
+  }
+
+  header{
+    width:100%;
+    padding:14px 14px 12px;
+  }
+
+  h1{
+    font-size:21px;
+  }
+
+  main{
+    width:100%;
+    max-width:none;
+    margin:0;
+   padding:12px 8px 90px;
+  }
+
+  .card{
+    width:100%;
+    padding:14px;
+    margin:8px 0;
+    border-radius:14px;
+  }
+
+  .hero{
+    font-size:17px;
+  }
+
+  nav{
+    width:100%;
+    left:0;
+    right:0;
+  }
+
+  nav button{
+    flex:1;
+    font-size:12px;
+    padding:10px 1px;
+    min-height:58px;
+  }
 }
 </style></head><body>
 <header><h1>🍽️ Menus Famille</h1><div class="date">2 adultes · 2 enfants · cycle mercredi → mardi</div></header>
